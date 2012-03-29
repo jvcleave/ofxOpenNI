@@ -291,6 +291,20 @@ ofxTrackedUser* ofxUserGenerator::getTrackedUser(int nUserNum) {
 	
 }
 
+vector<ofxTrackedUser*> ofxUserGenerator::getTrackedUsers() {
+	vector<ofxTrackedUser*> found;
+	for(int i =0; i<MAX_NUMBER_USERS; i++)
+	{
+		ofxTrackedUser* user = tracked_users[i];
+		if (user->skeletonCalibrated) 
+		{
+			found.push_back(user);
+		}
+	}
+	
+	return found;
+}
+
 void ofxUserGenerator::setMaxNumberOfUsers(int nUsers) {
 	// TODO: make this truly dynamic by replacing the define and writing dynamic allocation/deletion functions for the arrays! Lazy method below ;-)
 	if (nUsers <= MAX_NUMBER_USERS) {

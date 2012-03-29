@@ -53,6 +53,8 @@ struct ofxLimb {
 	XnSkeletonJoint end_joint;
 	XnPoint3D position[2];
 	bool found;
+	ofVec2f begin;
+	ofVec2f end;
 
 	void debugDraw() {
 		if(!found)

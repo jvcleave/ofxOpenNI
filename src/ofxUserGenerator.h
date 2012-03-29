@@ -66,6 +66,7 @@ public:
 	
 	void				setMaxNumberOfUsers(int nUsers);
 	int					getNumberOfTrackedUsers();
+	vector<ofxTrackedUser*> getTrackedUsers();
 	ofxTrackedUser*		getTrackedUser(int nUserNum);
 	unsigned char *		getUserPixels(int userID = 0);
 	ofPoint				getWorldCoordinateAt(int x, int y, int userID = 0);
