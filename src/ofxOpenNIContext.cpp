@@ -209,6 +209,7 @@ bool ofxOpenNIContext::setMirror(XnBool mirroring) {
 
 bool ofxOpenNIContext::toggleRegisterViewport() {
 	
+	cout << "toggleRegisterViewport" << endl;
 	// get refs to depth and image generators TODO: make work with IR generator
 	xn::DepthGenerator depth_generator;
 	getDepthGenerator(&depth_generator);

@@ -61,6 +61,22 @@ ofxTrackedUser::ofxTrackedUser(ofxOpenNIContext* pContext)
 	context = pContext;
 	context->getDepthGenerator(&depth_generator);
 	context->getUserGenerator(&user_generator);
+	limbs.push_back(&neck);
+	limbs.push_back(&left_shoulder);
+	limbs.push_back(&left_upper_arm);
+	limbs.push_back(&left_lower_arm);
+	limbs.push_back(&right_shoulder);
+	limbs.push_back(&right_upper_arm);
+	limbs.push_back(&right_lower_arm);
+	limbs.push_back(&left_upper_torso);
+	limbs.push_back(&right_upper_torso);
+	limbs.push_back(&left_lower_torso);
+	limbs.push_back(&left_upper_leg);
+	limbs.push_back(&left_lower_leg);
+	limbs.push_back(&right_lower_torso);
+	limbs.push_back(&right_upper_leg);
+	limbs.push_back(&right_lower_leg);
+	limbs.push_back(&hip);
 }
 
 void ofxTrackedUser::updateBonePositions() {
@@ -96,7 +112,7 @@ void ofxTrackedUser::updateBonePositions() {
 
 void ofxTrackedUser::updateLimb(ofxLimb& rLimb) {
 	
-	if(!user_generator.GetSkeletonCap().IsTracking(id)) {
+	if(!(user_generator.GetSkeletonCap().IsTracking(id))) {
 		//printf("Not tracking this user: %d\n", id);
 		return;
 	}
@@ -114,9 +130,8 @@ void ofxTrackedUser::updateLimb(ofxLimb& rLimb) {
 	rLimb.position[1] = b.position;
 	
 	depth_generator.ConvertRealWorldToProjective(2, rLimb.position, rLimb.position);
-	depth_generator.ConvertRealWorldToProjective(2, rLimb.position, rLimb.position);
-	rLimb.begin.set(rLimb.position[0].X, rLimb.position[0].Y);
-	rLimb.end.set(rLimb.position[1].X, rLimb.position[1].Y);	
+	rLimb.begin.set(rLimb.position[0].X, rLimb.position[0].Y, rLimb.position[0].Z);
+	rLimb.end.set(rLimb.position[1].X, rLimb.position[1].Y, rLimb.position[1].Z);
 	
 }
 

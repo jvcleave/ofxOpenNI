@@ -260,24 +260,30 @@ void ofxUserGenerator::drawUser(int nUserNum, const float wScale, const float hS
 //----------------------------------------
 void ofxUserGenerator::draw(const int width, const int height) {
 	
+	ofPushStyle();
 	// show green/red circle if any one is found
-	if (found_users > 0) {
-    const float wScale = width/640.0f;
-    const float hScale = height/480.0f;
+	if (found_users > 0) 
+	{
+		const float wScale = width/640.0f;
+		const float hScale = height/480.0f;
 		
 		// draw all the users
-		for(int i = 0;  i < found_users; ++i) {
+		for(int i = 0;  i < found_users; ++i) 
+		{
 			drawUser(i, wScale, hScale);
 		}
 		
-		glColor3f(0, 1.0f, 0);
+		ofSetColor(ofColor::green);
 		
-	} else glColor3f(1.0f, 0, 0);
+	} else 
+	{
+		ofSetColor(ofColor::red);
+
+	}
 	
 	ofCircle(10, 10, 10);
-	
-	// reset to white for simplicity
-	glColor3f(1.0f, 1.0f, 1.0f);
+		
+	ofPopStyle();
 	
 }
 

@@ -53,20 +53,25 @@ struct ofxLimb {
 	XnSkeletonJoint end_joint;
 	XnPoint3D position[2];
 	bool found;
-	ofVec2f begin;
-	ofVec2f end;
-
-	void debugDraw() {
+	ofVec3f begin;
+	ofVec3f end;
+	void debugDraw() 
+	{
 		if(!found)
+		{
 			return;
-		glPushMatrix();
-		glLineWidth(5);
-		glColor3f(1,0,0);
-		glBegin(GL_LINES);
-		glVertex2i(position[0].X, position[0].Y);
-		glVertex2i(position[1].X, position[1].Y);
-		glEnd();
-		glPopMatrix();
+		}
+			
+		ofPushStyle();
+			ofPushMatrix();
+				ofSetLineWidth(5);
+				ofSetColor(ofColor::red);
+				glBegin(GL_LINES);
+					glVertex2i(position[0].X, position[0].Y);
+					glVertex2i(position[1].X, position[1].Y);
+				glEnd();
+			ofPopMatrix();
+		ofPopStyle();
 	}
 
 };
@@ -105,7 +110,7 @@ public:
 
 	ofxLimb hip;
 	XnUserID id;
-
+	vector<ofxLimb *> limbs;
     bool skeletonTracking, skeletonCalibrating, skeletonCalibrated;
     XnPoint3D	center;
     
