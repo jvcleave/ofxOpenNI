@@ -34,54 +34,16 @@
 #include <XnCppWrapper.h>
 #include "ofxOpenNIContext.h"
 #include "ofMain.h"
+#include "ofxLimb.h"
 
-struct ofxLimb {
-	ofxLimb(XnSkeletonJoint nStartJoint, XnSkeletonJoint nEndJoint)
-	:start_joint(nStartJoint)
-	,end_joint(nEndJoint)
-	,found(false)
-	{
-		position[0].X = position[1].X = 0;
-		position[0].Y = position[1].Y = 0;
-		position[0].Z = position[1].Z = 0;
-	}
 
-	ofxLimb(){};
-	~ofxLimb(){};
-
-	XnSkeletonJoint start_joint;
-	XnSkeletonJoint end_joint;
-	XnPoint3D position[2];
-	bool found;
-	ofVec3f begin;
-	ofVec3f end;
-	void debugDraw() 
-	{
-		if(!found)
-		{
-			return;
-		}
-			
-		ofPushStyle();
-			ofPushMatrix();
-				ofSetLineWidth(5);
-				ofSetColor(ofColor::red);
-				glBegin(GL_LINES);
-					glVertex2i(position[0].X, position[0].Y);
-					glVertex2i(position[1].X, position[1].Y);
-				glEnd();
-			ofPopMatrix();
-		ofPopStyle();
-	}
-
-};
 
 class ofxOpenNIContext;
 class ofxTrackedUser {
 public:
 
 	void debugDraw(const float wScale=1.0f, const float hScale=1.0f);
-
+	ofNode node;
 	ofxLimb neck;
 
 	// left arm + shoulder
@@ -113,7 +75,8 @@ public:
 	vector<ofxLimb *> limbs;
     bool skeletonTracking, skeletonCalibrating, skeletonCalibrated;
     XnPoint3D	center;
-    
+	ofPoint centerPoint;
+    void transformNode(int nodeNum, XnSkeletonJoint skelJoint);
 private:
 
 	ofxTrackedUser(ofxOpenNIContext* pContext);

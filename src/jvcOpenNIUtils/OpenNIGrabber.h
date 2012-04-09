@@ -12,12 +12,20 @@
 #include "ofxOpenNI.h"
 #include "OpenNIPerson.h"
 
-
+class OpenNIGrabberEventData  {
+public:
+	OpenNIGrabberEventData(int personID)
+	{
+		id = personID;
+	}
+	int id;
+};
 
 class OpenNIGrabber
 {
 public:
 	OpenNIGrabber();
+	~OpenNIGrabber();
 	void setup();
 	void setupWithFile(string _filename);
 	void update();
@@ -33,8 +41,8 @@ public:
 	
 	void createUser(int nID);
 	void deleteUser(int nID);
-	void showUser(int nID);
-	void hideUser(int nID);
+	void onUserReEnter(int nID);
+	void onUserExit(int nID);
 	
 	vector<OpenNIPerson> people;
 	
@@ -42,4 +50,12 @@ public:
 	float filterFactor;
 	bool isMasking;
 	bool isCloud;
+	bool doAlignImageToDepth;
+	ofEvent<OpenNIGrabberEventData> onPersonCreatedEventDispatcher;
+	ofEvent<OpenNIGrabberEventData> onPersonDeletedEventDispatcher;
+	ofEvent<OpenNIGrabberEventData> onPersonReEnterDispatcher;
+	ofEvent<OpenNIGrabberEventData> onPersonExitDispatcher;
+
+	
+	
 };
