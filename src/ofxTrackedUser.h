@@ -76,7 +76,6 @@ public:
     bool skeletonTracking, skeletonCalibrating, skeletonCalibrated;
     XnPoint3D	center;
 	ofPoint centerPoint;
-    void transformNode(int nodeNum, XnSkeletonJoint skelJoint);
 private:
 
 	ofxTrackedUser(ofxOpenNIContext* pContext);

@@ -140,34 +140,7 @@ void ofxTrackedUser::updateLimb(ofxLimb& rLimb) {
 	centerPoint = ofVec3f(aProjective[0].X, aProjective[0].Y, aProjective[0].Z);
 	//cout << "centerPoint: " << centerPoint << endl;
 	
-	// Get the openNI bone info	
-	xn::SkeletonCapability pUserSkel = user_generator.GetSkeletonCap();		
-	
-	XnSkeletonJointOrientation jointOriA, jointOriB;
-	user_generator.GetSkeletonCap().GetSkeletonJointOrientation(id, rLimb.start_joint, jointOriA);
-	user_generator.GetSkeletonCap().GetSkeletonJointOrientation(id, rLimb.end_joint, jointOriB);
-	float * oriM = jointOriA.orientation.elements;
-		
-		ofMatrix4x4 rotMatrix;
-		
-		// Create a 4x4 rotation matrix (converting row to column-major)
-		rotMatrix.set(oriM[0], oriM[3], oriM[6], 0.0f,
-					  oriM[1], oriM[4], oriM[7], 0.0f,
-					  oriM[2], oriM[5], oriM[8], 0.0f,
-					  0.0f, 0.0f, 0.0f, 1.0f);
-		
-		ofQuaternion q = rotMatrix.getRotate();
-		
-		
-		ofQuaternion bindPoseOrientation;
-		
-		rLimb.node.setPosition(a.position.X, a.position.Y, a.position.Z);
-		
-		// apply skeleton pose relatively to the bone bind pose
-		// /!\ WARNING the order of the quat' multiplication does mater!!
-		rLimb.node.setOrientation(bindPoseOrientation*q);
-		
-	//https://github.com/kikko/ofApps/blob/master/openNISkeleton/src/testApp.h
+
 	
 }
 

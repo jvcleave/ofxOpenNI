@@ -155,22 +155,21 @@ void OpenNIGrabber::drawUsers()
 
 void OpenNIGrabber::drawAllScreens()
 {
-	imageGenerator.draw(0, 0, 640, 480);
-	depthGenerator.draw(640, 0, 640, 480);
-	ofPushMatrix();
-	ofTranslate(0, 480, 0);
-	userGenerator.draw();
-	ofPopMatrix();
+		imageGenerator.draw(0, 0, 640, 480);
+		depthGenerator.draw(640, 0, 640, 480);
+		ofPushMatrix();
+			ofTranslate(0, 480, 0);
+			userGenerator.draw();
+		ofPopMatrix();
 	
-	ofPushMatrix();
-	ofTranslate(640, 480, 0);
-	ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-	imageGenerator.draw(0, 0, 640, 480);
-	depthGenerator.draw(0, 0, 640, 480);
-	ofDisableBlendMode();
-	userGenerator.draw();
-	ofPopMatrix();
-	
+		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+			ofPushMatrix();
+				ofTranslate(640, 480, 0);				
+					imageGenerator.draw(0, 0, 640, 480);
+					depthGenerator.draw(0, 0, 640, 480);
+					userGenerator.draw();
+			ofPopMatrix();
+		ofDisableBlendMode();
 }
 void OpenNIGrabber::createUser(int nID)
 {

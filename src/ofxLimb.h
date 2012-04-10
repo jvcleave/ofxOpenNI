@@ -26,7 +26,6 @@ public:
 
 	}
 	
-	ofNode node;
 	ofxLimb(){};
 	~ofxLimb(){};
 	
@@ -43,6 +42,12 @@ public:
 		{
 			return;
 		}
+		ofVec3f a(position[0].X, position[0].Y);
+		ofVec3f b(position[1].X, position[1].Y);
+		
+		ofVec3f normal = b - a;
+		
+		float height = normal.length();
 		
 		ofPushStyle();
 		ofPushMatrix();
@@ -55,19 +60,14 @@ public:
 			ofPopMatrix();
 		ofPopStyle();
 		
-		ofVec3f a(position[0].X, position[0].Y);
-		ofVec3f b(position[1].X, position[1].Y);
-		
-		ofVec3f normal = b - a;
-		
-		float height = normal.length();
+	
 		normal.normalize();
 		
 		ofVec3f forward(0, -1, 0);
 		ofVec3f axis = forward.crossed(normal);
 		float angle = forward.angle(normal);
 
-		if (doFont)
+		/*if (doFont)
 		{
 			font.drawString(ofToString(angle, 1), begin.x+30, begin.y);
 			
@@ -75,13 +75,14 @@ public:
 			ofPushMatrix();
 			ofPushStyle();
 			ofSetColor(ofColor::black);
-			ofTranslate(begin.x, begin.y, begin.z);  
-			ofRotate( angle, axis.x, axis.y,axis.z);
+			ofTranslate(a.x, a.y);  
+			ofRotateY(angle);
+			//( angle, axis.x, axis.y,axis.z);
 			//ofRotate( angle,axis.x,axis.y,axis.z); 
-			ofRect(a.x, a.y, 10, height);
+			
 			ofPopStyle();
 			ofPopMatrix();
-		}
+		}*/
 
 	}
 	
