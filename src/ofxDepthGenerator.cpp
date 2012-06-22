@@ -75,8 +75,16 @@ ofxDepthGenerator::ofxDepthGenerator(){
 }
 ofxDepthGenerator::~ofxDepthGenerator()
 {
-	delete[] depth_pixels;
-	delete[] maskPixels;
+	if (depth_pixels !=NULL) {
+		delete[] depth_pixels;
+		depth_pixels = NULL;
+	}
+	for(int i=0; i<maskPixels.size(); i++)
+	{
+		delete maskPixels[i];
+		maskPixels[i] = NULL;
+	}
+	maskPixels.clear();
 	ofLogVerbose() << "~ofxDepthGenerator" << endl;
 }
 bool ofxDepthGenerator::setup(ofxOpenNIContext* pContext) {
@@ -114,7 +122,7 @@ bool ofxDepthGenerator::setup(ofxOpenNIContext* pContext) {
 	
 	// setup mask pixelskk
 	for (int i = 0; i < MAX_NUMBER_DEPTHS; i++) {
-		maskPixels[i] = new unsigned char[width * height];
+		maskPixels.push_back(new unsigned char[width * height]);
 		depth_thresholds[i].nearThreshold = 0;
 		depth_thresholds[i].farThreshold = 10000;
 	}

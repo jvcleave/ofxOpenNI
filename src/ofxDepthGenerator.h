@@ -95,7 +95,7 @@ private:
 	int					depth_coloring;
 	int					width, height;
 	float				max_depth;
-	unsigned char*		maskPixels[MAX_NUMBER_DEPTHS];
+	vector<unsigned char *>		maskPixels;
 	depth_threshold		depth_thresholds[MAX_NUMBER_DEPTHS];
 	int					max_number_depths;
 	
