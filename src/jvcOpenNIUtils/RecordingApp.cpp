@@ -34,11 +34,13 @@ void RecordingApp::draw(){
 void RecordingApp::keyPressed(int key){
 	if (key ==  ' ') {
 		
-		isRecording = !isRecording;
+		//isRecording = !isRecording;
 		if (isRecording) {
 			recorder.stopRecording();
+			isRecording = false;
 		}else {
 			recorder.startRecording();
+			isRecording = true;
 		}
 
 		
