@@ -42,6 +42,7 @@ class ofxOpenNIContext;
 class ofxTrackedUser {
 public:
 
+	~ofxTrackedUser();
 	void debugDraw(const float wScale=1.0f, const float hScale=1.0f);
 	ofNode node;
 	ofxLimb neck;

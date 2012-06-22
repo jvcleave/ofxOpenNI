@@ -39,7 +39,8 @@
 //--------------------------------------------------------------
 ofxTrackedHand::ofxTrackedHand(ofxOpenNIContext* pContext)
 {
-	pContext->getDepthGenerator(&depth_generator);
+	context = pContext;
+	context->getDepthGenerator(&depth_generator);
 	
 	XnMapOutputMode map_mode;
 	depth_generator.GetMapOutputMode(map_mode);
@@ -56,7 +57,7 @@ ofxTrackedHand::ofxTrackedHand(ofxOpenNIContext* pContext)
 // dtor
 //--------------------------------------------------------------
 ofxTrackedHand::~ofxTrackedHand() {
- // nothing
+	//
 }
 
 //--------------------------------------------------------------
@@ -70,6 +71,10 @@ void ofxTrackedHand::update(const XnPoint3D* pPosition, bool filter, bool force)
 	
 	rawPos = *pPosition;
 	XnPoint3D rawProj = rawPos;
+	if (!depth_generator) {
+		context->getDepthGenerator(&depth_generator);
+		ofLogVerbose() << "HAD TO REGENERATE getDepthGenerator" << endl;
+	}
 	depth_generator.ConvertRealWorldToProjective(1, &rawProj, &rawProj);
 	
 	if (filter && !force)

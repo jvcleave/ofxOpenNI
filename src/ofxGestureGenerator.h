@@ -77,6 +77,7 @@ public:
 	void						setVerbose(bool b);	
 	
 private:
+	XnCallbackHandle gesture_cb_handle;
 	
 	ofxOpenNIContext*		context;
 	xn::GestureGenerator	gesture_generator;

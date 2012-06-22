@@ -18,10 +18,9 @@ public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
-	OpenNIGrabber player;
+	ofPtr<OpenNIGrabber> player;
 	vector<string> oniFilePaths;
 	string selectedFileName;
-	bool doInit;
 	bool isPlayerReady;
 	string info;
 };

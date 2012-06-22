@@ -34,7 +34,6 @@
 #include "ofxDepthGenerator.h"
 #include "ofxImageGenerator.h"
 
-#define MAX_NUMBER_USERS 8
 
 class ofxTrackedUser;
 
@@ -43,9 +42,9 @@ class ofxUserGenerator {
 public:
 	
 	ofxUserGenerator();
-	~ofxUserGenerator(){};
+	~ofxUserGenerator();
 	
-	bool				setup(ofxOpenNIContext* pContext);
+	bool				setup(ofxOpenNIContext* pContext, int maxUsers);
 	
 	void				draw(const int width=640, const int height=480);
 	void				update();
@@ -74,7 +73,7 @@ public:
 	
 	int					getWidth();
 	int					getHeight();
-	
+	int maxNumUsers;
 private:
 	
 	void				drawUser(int nUserNum, const float wScale=1.0f, const float hScale=1.0f);
@@ -89,19 +88,20 @@ private:
 	// vars for user tracking
 	XnBool							needs_pose;
 	XnChar							calibration_pose[20];
-	ofxTrackedUser *				tracked_users[MAX_NUMBER_USERS];
+	vector<ofxTrackedUser *>				tracked_users;
 	XnUInt16						found_users;
-	int								max_num_users;
 	
 	// vars for cloud point and masking
 	XnUInt16			width, height;
-	unsigned char *		maskPixels[MAX_NUMBER_USERS+1];//including 0 as all users
-	ofPoint		*		cloudPoints[MAX_NUMBER_USERS+1];//including 0 as all users
-	ofColor		*		cloudColors[MAX_NUMBER_USERS+1];//including 0 as all users
+	vector<unsigned char *>		maskPixels;//including 0 as all users
+	vector<ofPoint		*>		cloudPoints;//including 0 as all users
+	vector<ofColor		*>		cloudColors;//including 0 as all users
 	bool				useMaskPixels, useCloudPoints;
 	
 	float				smoothing_factor;
-	
+	XnCallbackHandle user_pose_cb_handle;
+	XnCallbackHandle user_cb_handle;
+	XnCallbackHandle calibration_cb_handle;
 };
 
 #endif

@@ -4,7 +4,7 @@
 //--------------------------------------------------------------
 void PlaybackApp::setup()
 {
-	doInit = false;
+	ofSetLogLevel(OF_LOG_VERBOSE);
 	isPlayerReady = false;
 	ofDirectory directory(ofToDataPath("", true));
 	directory.listDir();
@@ -33,36 +33,30 @@ void PlaybackApp::setup()
 		//cout << "HIT: " << files[i].getFileName() << endl;
 
 	}
-						 
+	player  = ofPtr<OpenNIGrabber>(new OpenNIGrabber());					 
 }
 
 //--------------------------------------------------------------
 void PlaybackApp::update(){
-	if (doInit ) 
-	{
-		doInit = false;
-		
-		player.setupWithFile(selectedFileName);
-		isPlayerReady = true;
-	}
-	if (isPlayerReady) {
-		player.update();
-	}
+
+		player->update();
 }
 
 //--------------------------------------------------------------
 void PlaybackApp::draw(){
-	if (isPlayerReady)
-	{
-		player.drawAllScreens();
-	}
+	player->drawAllScreens();
+
 	ofDrawBitmapString(info, 20, 20);
 }
 
 //--------------------------------------------------------------
 void PlaybackApp::keyPressed(int key){
 	
-
+	if (key== ' ')
+	{
+		player.reset();
+		return;
+	}
 	int keyOffset = key-48;
 	cout << "keyPressed: " << key << "keyOffset: " << keyOffset << " oniFilePaths.size(): " << oniFilePaths.size() << endl;
 	
@@ -70,7 +64,7 @@ void PlaybackApp::keyPressed(int key){
 	{
 		cout << "SELECTING: " << oniFilePaths.at(keyOffset) << endl;
 		selectedFileName = oniFilePaths.at(keyOffset);
-		doInit = true;
+		player->setupWithFile(selectedFileName);
 	}
 	
 }

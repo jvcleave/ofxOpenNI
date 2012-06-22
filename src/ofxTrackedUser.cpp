@@ -78,7 +78,16 @@ ofxTrackedUser::ofxTrackedUser(ofxOpenNIContext* pContext)
 	limbs.push_back(&right_lower_leg);
 	limbs.push_back(&hip);
 }
-
+ofxTrackedUser::~ofxTrackedUser()
+{
+	for(int i=0; i<limbs.size(); i++)
+	{
+		delete limbs[i];
+		limbs[i] = NULL;
+	}
+	limbs.clear();
+	ofLogVerbose() << "~ofxTrackedUser DELETED" << endl;
+}
 void ofxTrackedUser::updateBonePositions() {
 	
 	updateLimb(neck);

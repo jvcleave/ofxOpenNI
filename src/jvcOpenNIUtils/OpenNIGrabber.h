@@ -34,7 +34,7 @@ public:
 	void drawUsers();
 	void drawAllScreens();
 	ofxOpenNIContext context;
-	ofxDepthGenerator depthGenerator;
+	ofxDepthGenerator* depthGenerator;
 	ofxImageGenerator imageGenerator;
 	ofxUserGenerator userGenerator;
 	ofxHandGenerator handGenerator;
@@ -46,7 +46,7 @@ public:
 	
 	vector<OpenNIPerson> people;
 	
-	
+	bool areCallbacksActive;
 	float filterFactor;
 	bool isMasking;
 	bool isCloud;
@@ -56,6 +56,9 @@ public:
 	ofEvent<OpenNIGrabberEventData> onPersonReEnterDispatcher;
 	ofEvent<OpenNIGrabberEventData> onPersonExitDispatcher;
 
-	
-	
+	bool isReady;
+	XnCallbackHandle user_cb_handle;
+	XnCallbackHandle user_exit_handle;
+	XnCallbackHandle user_reenter_handle;
+	XnCallbackHandle calibration_cb_handle;
 };

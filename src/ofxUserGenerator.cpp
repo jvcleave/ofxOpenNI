@@ -114,10 +114,44 @@ void XN_CALLBACK_TYPE UserCalibration_CalibrationEnd(
 // =============================================================================
 ofxUserGenerator::ofxUserGenerator() {	
 	needs_pose = false;
-	max_num_users = MAX_NUMBER_USERS;
 }
 
-
+ofxUserGenerator::~ofxUserGenerator()
+{
+	cout << "~ofxUserGenerator DELETED" << endl;
+	for(int i=0; i<maskPixels.size(); i++)
+	{
+		delete maskPixels[i];
+		maskPixels[i] = NULL;
+	}
+	maskPixels.clear();
+	
+	for(int i=0; i<cloudPoints.size(); i++)
+	{
+		delete cloudPoints[i];
+		cloudPoints[i] = NULL;
+	}
+	cloudPoints.clear();
+	
+	
+	for(int i=0; i<cloudColors.size(); i++)
+	{
+		delete cloudColors[i];
+		cloudColors[i] = NULL;
+	}
+	cloudColors.clear();
+	
+	user_generator.UnregisterUserCallbacks(user_cb_handle);
+	user_generator.GetSkeletonCap().UnregisterCalibrationCallbacks(calibration_cb_handle);
+	user_generator.GetPoseDetectionCap().UnregisterFromPoseCallbacks(user_pose_cb_handle);
+	for(int i =0; i<tracked_users.size(); i++)
+	{
+		delete tracked_users[i];
+		tracked_users[i] = NULL;
+	}
+	tracked_users.clear();
+	user_generator.Unref();
+}
 //----------------------------------------
 void ofxUserGenerator::startPoseDetection(XnUserID nID) {
 	printf("Start pose detection: %d +++++++++++++++++++++++++++++\n", nID);
@@ -139,10 +173,10 @@ void ofxUserGenerator::requestCalibration(XnUserID nID) {
 
 // Setup the user generator.
 //----------------------------------------
-bool ofxUserGenerator::setup( ofxOpenNIContext* pContext) {
+bool ofxUserGenerator::setup( ofxOpenNIContext* pContext, int maxUsers=8) {
 	
+	maxNumUsers = maxUsers;
 	bool ok = false;
-	
 	// store context and generator references
 	context	= pContext;
 	ok = context->getDepthGenerator(&depth_generator);
@@ -161,21 +195,37 @@ bool ofxUserGenerator::setup( ofxOpenNIContext* pContext) {
 	
 	// set update mask pixels default to false
 	useMaskPixels = false;
-	
-	// setup mask pixels array TODO: clean this up on closing or dtor
-    //including 0 as all users
-	for (int user = 0; user <= MAX_NUMBER_USERS; user++) {
-		maskPixels[user] = new unsigned char[width * height];
+	if (maskPixels.size() < maxUsers) 
+	{
+		
+		for (int i = 0; i < maxUsers; i++) 
+		{
+			
+			maskPixels.push_back(new unsigned char[width * height]);
+			
+		}
 	}
+	
 	
 	// set update cloud points default to false
 	useCloudPoints = false;
 	
 	// setup cloud points array TODO: clean this up on closing or dtor
     //including 0 as all users
-	for (int user = 0; user <= MAX_NUMBER_USERS; user++) {
-		cloudPoints[user] = new ofPoint[width * height];
-		cloudColors[user] = new ofColor[width * height];
+	if (cloudPoints.size() < maxUsers) 
+	{
+		for (int i = 0; i < maxNumUsers; i++) 
+		{
+			cloudPoints.push_back(new ofPoint[width * height]);
+		}
+	}
+	
+	if (cloudColors.size() < maxUsers) 
+	{
+		for (int i = 0; i < maxNumUsers; i++) 
+		{
+			cloudColors.push_back(new ofColor[width * height]);
+		}
 	}
 	
 	// check if the USER generator exists.
@@ -189,7 +239,7 @@ bool ofxUserGenerator::setup( ofxOpenNIContext* pContext) {
 	}	
 	
 	// register user callbacks
-	XnCallbackHandle user_cb_handle;
+
 	user_generator.RegisterUserCallbacks(
 		 User_NewUser
 		,User_LostUser
@@ -197,7 +247,7 @@ bool ofxUserGenerator::setup( ofxOpenNIContext* pContext) {
 		,user_cb_handle
 	);
 	
-	XnCallbackHandle calibration_cb_handle;
+	
 	user_generator.GetSkeletonCap().RegisterCalibrationCallbacks(
 		 UserCalibration_CalibrationStart
 		,UserCalibration_CalibrationEnd
@@ -215,15 +265,13 @@ bool ofxUserGenerator::setup( ofxOpenNIContext* pContext) {
 			return false;
 		}
 		
-		XnCallbackHandle user_pose_cb_handle;
-		
+
 		user_generator.GetPoseDetectionCap().RegisterToPoseCallbacks(
 			 UserPose_PoseDetected
 			,NULL
 			,this
 			,user_pose_cb_handle
 		);
-		
 		user_generator.GetSkeletonCap().GetCalibrationPose(calibration_pose);
 		
 	}
@@ -237,11 +285,15 @@ bool ofxUserGenerator::setup( ofxOpenNIContext* pContext) {
 	CHECK_RC(result, "StartGenerating");
 
 	// pre-generate the tracked users.
-	for(int i = 0; i < MAX_NUMBER_USERS; ++i) {
-		printf("Creting user: %i\n", i+1);
-		ofxTrackedUser* tracked_user = new ofxTrackedUser(context);
-		tracked_users[i] = tracked_user;
+	if (tracked_users.size()<maxNumUsers) 
+	{
+		for(int i = 0; i < maxNumUsers; ++i) {
+			printf("Creating user: %i\n", i+1);
+			ofxTrackedUser* tracked_user = new ofxTrackedUser(context);
+			tracked_users.push_back(tracked_user);
+		}
 	}
+	
 
 	return true;
 }
@@ -250,10 +302,15 @@ bool ofxUserGenerator::setup( ofxOpenNIContext* pContext) {
 // Draw a specific user (start counting at 0)
 //----------------------------------------
 void ofxUserGenerator::drawUser(int nUserNum, const float wScale, const float hScale) {
-	if(nUserNum - 1 > max_num_users)
+	/*if(nUserNum - 1 > max_num_users)
 		return;
 	tracked_users[nUserNum]->updateBonePositions();
-	tracked_users[nUserNum]->debugDraw(wScale, hScale);
+	tracked_users[nUserNum]->debugDraw(wScale, hScale);*/
+	/*for( int i=0; i<tracked_users.size(); i++)
+	{
+		tracked_users[i]->updateBonePositions();
+		tracked_users[i]->debugDraw(wScale, hScale);
+	}*/
 }
 
 // Draw all the found users.
@@ -299,7 +356,7 @@ ofxTrackedUser* ofxUserGenerator::getTrackedUser(int nUserNum) {
 
 vector<ofxTrackedUser*> ofxUserGenerator::getTrackedUsers() {
 	vector<ofxTrackedUser*> found;
-	for(int i =0; i<MAX_NUMBER_USERS; i++)
+	for(int i =0; i<maxNumUsers; i++)
 	{
 		ofxTrackedUser* user = tracked_users[i];
 		if (user->skeletonCalibrated) 
@@ -311,12 +368,7 @@ vector<ofxTrackedUser*> ofxUserGenerator::getTrackedUsers() {
 	return found;
 }
 
-void ofxUserGenerator::setMaxNumberOfUsers(int nUsers) {
-	// TODO: make this truly dynamic by replacing the define and writing dynamic allocation/deletion functions for the arrays! Lazy method below ;-)
-	if (nUsers <= MAX_NUMBER_USERS) {
-		max_num_users = nUsers;
-	} else printf("Attempting to set number of tracked users higher than MAX_NUMBER_USERS - change the define in ofxUserGenerator.h first!");
-}
+
 
 // Get number of tracked users
 int ofxUserGenerator::getNumberOfTrackedUsers() {
@@ -327,9 +379,9 @@ int ofxUserGenerator::getNumberOfTrackedUsers() {
 //----------------------------------------
 void ofxUserGenerator::update() {
 	
-	found_users = max_num_users;
+	found_users = maxNumUsers;
 	
-	XnUserID* users = new XnUserID[max_num_users];
+	XnUserID* users = new XnUserID[maxNumUsers];
 	user_generator.GetUsers(users, found_users);
 	
 	for(int i = 0; i < found_users; ++i) {
@@ -403,13 +455,19 @@ void ofxUserGenerator::updateUserPixels() {
 																//  Ie.,	if userPix[i] == 0 then it's not being tracked -> it's the background!
 																//			if userPix[i] > 0 then the pixel belongs to the user who's value IS userPix[i]
 																//  // (many thanks to ascorbin who's code made this apparent to me)
-	for (int i =0 ; i < width * height; i++) {
+	for (int i =0 ; i < width * height; i++) 
+	{
 		
 		// lets cycle through the users and allocate pixels into seperate masks for each user, including 0 as all users
-		for (int user = 0; user <= max_num_users; user++) {
-			if (userPix[i] == user) {
+		for (int user = 0; user <maxNumUsers; user++) 
+		{
+			if (userPix[i] == user) 
+			{
 				maskPixels[user][i] = (user == 0 ? 0 : 255);
-			} else maskPixels[user][i] = (user == 0 ? 255 : 0);
+			} else 
+			{
+				maskPixels[user][i] = (user == 0 ? 255 : 0);
+			}
 		}
 
 	}
@@ -448,7 +506,7 @@ void ofxUserGenerator::updateCloudPoints() {
 		
 		for (int nX = 0; nX < width; nX += step, nIndex += step) {
 		
-			for (int user = 0; user <= max_num_users; user++) {
+			for (int user = 0; user <maxNumUsers; user++) {
 
 				if (userPix[nIndex] == user || user == 0) {
 					cloudPoints[user][nIndex].x = nX;

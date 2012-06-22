@@ -281,8 +281,8 @@ xn::Context& ofxOpenNIContext::getXnContext(){
 }
 
 void ofxOpenNIContext::shutdown() {
-	printf("Shutdown context\n");
-	context.Shutdown();
+	ofLogVerbose() << "ofxOpenNIContext::shutdown";
+	context.Release();
 }
 
 // Shutdown.

@@ -73,7 +73,12 @@ ofxDepthGenerator::ofxDepthGenerator(){
 	depth_coloring = COLORING_RAINBOW;
 	max_number_depths = 1;
 }
-
+ofxDepthGenerator::~ofxDepthGenerator()
+{
+	delete[] depth_pixels;
+	delete[] maskPixels;
+	ofLogVerbose() << "~ofxDepthGenerator" << endl;
+}
 bool ofxDepthGenerator::setup(ofxOpenNIContext* pContext) {
 
 	XnStatus result = XN_STATUS_OK;	

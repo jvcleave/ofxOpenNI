@@ -73,10 +73,13 @@ void XN_CALLBACK_TYPE onUserReEnterCallback(xn::UserGenerator& rGenerator, XnUse
 
 OpenNIGrabber::OpenNIGrabber()
 {
+	isReady = false;
 	filterFactor = 0.1f;
 	isMasking = true;
 	isCloud = false;
 	doAlignImageToDepth = false;
+	areCallbacksActive = false;
+	depthGenerator = new ofxDepthGenerator();
 }
 void OpenNIGrabber::setupWithFile(string _filename)
 {
@@ -86,6 +89,7 @@ void OpenNIGrabber::setupWithFile(string _filename)
 	handGenerator.setFilterFactors(filterFactor);		// custom smoothing/filtering (can also set per hand with setFilterFactor)...set them all to 0.1f to begin with
 	
 	addCallbacks();
+	isReady = true;
 	
 }
 
@@ -95,57 +99,61 @@ void OpenNIGrabber::setup()
 	context.setMirror(true);
 	
 	addCallbacks();
+	isReady = true;
 }
 void OpenNIGrabber::addCallbacks()
 {
 
 	
 	//
-	depthGenerator.setup(&context);
+	depthGenerator->setup(&context);
 	imageGenerator.setup(&context);
 	if (doAlignImageToDepth) 
 	{
 		context.unregisterViewport();
 	}
-	userGenerator.setup(&context);
+	userGenerator.setup(&context, 3);
 	userGenerator.setUseMaskPixels(isMasking);
 	userGenerator.setUseCloudPoints(isCloud);
-	XnCallbackHandle user_cb_handle;
-	XnCallbackHandle user_exit_handle;
+
 	userGenerator.getXnUserGenerator().RegisterToUserExit(onUserExitCallback, this, user_exit_handle);
 	
-	XnCallbackHandle user_reenter_handle;
 	userGenerator.getXnUserGenerator().RegisterToUserReEnter(onUserReEnterCallback, this, user_reenter_handle);
 	
 	userGenerator.getXnUserGenerator().RegisterUserCallbacks(onNewUserCallback, onLostUserCallback, this, user_cb_handle);
 	
-	XnCallbackHandle calibration_cb_handle;
 	userGenerator.getXnUserGenerator().GetSkeletonCap().RegisterCalibrationCallbacks(onCalibrationStartCallback, onCalibrationEndCallback, this, calibration_cb_handle);
 	
 	userGenerator.setSmoothing(filterFactor);
+	areCallbacksActive = true;
 	//context.toggleRegisterViewport();
 }
 
 
 void OpenNIGrabber::update()
 {
+	if(!isReady) return;
 	context.update();
-	depthGenerator.update();
+	depthGenerator->update();
 	imageGenerator.update();
 	userGenerator.update();	
 }
 
 void OpenNIGrabber::draw()
 {
+	if(!isReady) return;
+
 	if (people.size()==0) 
 	{
-		depthGenerator.draw(0, 0, 640, 480);
+		depthGenerator->draw(0, 0, 640, 480);
 	}
 	drawUsers();
 }
 
 void OpenNIGrabber::drawUsers()
 {
+	if(!isReady) return;
+
 	for(int i=0; i<people.size(); i++)
 	{
 		people[i].draw();
@@ -155,8 +163,10 @@ void OpenNIGrabber::drawUsers()
 
 void OpenNIGrabber::drawAllScreens()
 {
+	if(!isReady) return;
+
 		imageGenerator.draw(0, 0, 640, 480);
-		depthGenerator.draw(640, 0, 640, 480);
+		depthGenerator->draw(640, 0, 640, 480);
 		ofPushMatrix();
 			ofTranslate(0, 480, 0);
 			userGenerator.draw();
@@ -166,7 +176,7 @@ void OpenNIGrabber::drawAllScreens()
 			ofPushMatrix();
 				ofTranslate(640, 480, 0);				
 					imageGenerator.draw(0, 0, 640, 480);
-					depthGenerator.draw(0, 0, 640, 480);
+					depthGenerator->draw(0, 0, 640, 480);
 					userGenerator.draw();
 			ofPopMatrix();
 		ofDisableBlendMode();
@@ -222,6 +232,21 @@ void OpenNIGrabber::onUserExit(int nID)
 
 OpenNIGrabber::~OpenNIGrabber()
 {
+	ofLogVerbose() << "~OpenNIGrabber" << endl;
+	if (areCallbacksActive) 
+	{
+		userGenerator.getXnUserGenerator().UnregisterFromUserExit(user_exit_handle);
+		
+		userGenerator.getXnUserGenerator().UnregisterFromUserReEnter(user_reenter_handle);
+		
+		userGenerator.getXnUserGenerator().UnregisterUserCallbacks(user_cb_handle);
+		
+		userGenerator.getXnUserGenerator().GetSkeletonCap().UnregisterCalibrationCallbacks(calibration_cb_handle);
+		areCallbacksActive = false;
+	}
+
 	context.shutdown();
+	delete depthGenerator;
+	depthGenerator = NULL;
 }
 

@@ -44,7 +44,8 @@ ofxHandGenerator::ofxHandGenerator(){
 //--------------------------------------------------------------
 ofxHandGenerator::~ofxHandGenerator()
 {
-	// TODO: Unregister callbacks on shutdown
+	ofLogVerbose() << "~ofxHandGenerator";
+	//hands_generator.UnregisterHandCallbacks(hand_cb_handle);
 	tracked_hands.clear();
 	//removeGestures();
 	hands_generator.Unref();

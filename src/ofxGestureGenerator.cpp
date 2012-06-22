@@ -41,7 +41,8 @@ ofxGestureGenerator::ofxGestureGenerator() {
 // dtor
 //--------------------------------------------------------------
 ofxGestureGenerator::~ofxGestureGenerator() {
-	// TODO: Unregister callbacks on shutdown
+	gesture_generator.UnregisterGestureCallbacks(gesture_cb_handle);
+
 	gesture_generator.Unref();
 }
 
@@ -133,7 +134,7 @@ bool ofxGestureGenerator::setup(ofxOpenNIContext* pContext) {
 
 	last_gesture.gesture_timestamp = 0;
 	
-	XnCallbackHandle gesture_cb_handle;
+	
 	gesture_generator.RegisterGestureCallbacks(OpenNI_Gesture_Recognized, OpenNI_Gesture_Process, this, gesture_cb_handle);
 	
 	gesture_generator.StartGenerating();	

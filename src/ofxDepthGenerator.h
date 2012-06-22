@@ -56,7 +56,7 @@ class ofxDepthGenerator {
 public:
 	
 	ofxDepthGenerator();
-	
+	~ofxDepthGenerator();
 	bool				setup(ofxOpenNIContext* pContext);
 	
 	void				draw(float x=0, float y=0, float w=640, float h=480);

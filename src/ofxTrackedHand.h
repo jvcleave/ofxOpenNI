@@ -65,7 +65,7 @@ public:
 private:
 
 	ofxTrackedHand(ofxOpenNIContext* pContext);
-
+	ofxOpenNIContext* context;
 	xn::DepthGenerator	depth_generator;
 
 	float				xres, yres, zres;
