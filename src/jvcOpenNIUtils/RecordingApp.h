@@ -22,5 +22,5 @@ public:
 	
 	OpenNIGrabber grabber;
 	OpenNIRecorder recorder;
-	
+	bool isRecording;
 };
