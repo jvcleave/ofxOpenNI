@@ -10,6 +10,7 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxOpenNI.h"
+#include "OpenNISkeleton.h"
 
 
 class OpenNIPerson
@@ -18,8 +19,12 @@ public:
 	OpenNIPerson();
 	~OpenNIPerson();
 	int id;
-	void setup(int personID, ofxTrackedUser* trackedUser);
+	void setup(int personID, ofxUserGenerator* userGen);
 	void update();
 	void draw();
-	ofxTrackedUser *user;
+	void addSkeleton();
+	ofxTrackedUser *trackedUser;
+	ofxUserGenerator* userGenerator;
+	OpenNISkeleton* skeleton;
+	ofImage image;
 };

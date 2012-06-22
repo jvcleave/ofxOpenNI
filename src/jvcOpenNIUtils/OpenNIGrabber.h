@@ -40,6 +40,7 @@ public:
 	ofxHandGenerator handGenerator;
 	
 	void createUser(int nID);
+	void createTrackedUser(int nID);
 	void deleteUser(int nID);
 	void onUserReEnter(int nID);
 	void onUserExit(int nID);
