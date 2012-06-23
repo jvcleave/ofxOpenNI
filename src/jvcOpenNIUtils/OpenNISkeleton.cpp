@@ -12,6 +12,9 @@
 
 OpenNISkeleton::OpenNISkeleton()
 {
+	userGenerator = NULL;
+	trackedUser = NULL;
+	id = -1;
 	for(int i=0; i<kNumBones; i++) {
 		
 		bones[i].setPosition(ofRandomf()*10-5, ofRandomf()*10-5, ofRandomf()*10-5);
@@ -34,15 +37,15 @@ OpenNISkeleton::OpenNISkeleton()
 	}
 }
 
-void OpenNISkeleton::setup(OpenNIGrabber* grabber, ofxTrackedUser* trackedUser)
+void OpenNISkeleton::setup(ofxUserGenerator* userGen, ofxTrackedUser* user)
 {
-	oniGrabber = grabber;
-	user = trackedUser;
-	id = user->id;
+	userGenerator = userGen;
+	trackedUser = user;
+	id = trackedUser->id;
 }
 void OpenNISkeleton::update()
 {
-	if (user != NULL) 
+	if (trackedUser != NULL) 
 	{
 		transformNode(0, XN_SKEL_TORSO);
 		transformNode(1, XN_SKEL_WAIST);
@@ -61,16 +64,16 @@ void OpenNISkeleton::transformNode(int nodeNum, XnSkeletonJoint skelJoint)
 {
 	// Adapted code from OpenNI Simbad example
 
-	XnUserID userId = user->id;
+
 	
 	// Get the openNI bone info	
-	xn::SkeletonCapability pUserSkel = oniGrabber->userGenerator.getXnUserGenerator().GetSkeletonCap();		
+	xn::SkeletonCapability pUserSkel = userGenerator->getXnUserGenerator().GetSkeletonCap();		
 	
 	XnSkeletonJointOrientation jointOri;
-	pUserSkel.GetSkeletonJointOrientation(userId, skelJoint, jointOri);
+	pUserSkel.GetSkeletonJointOrientation(id, skelJoint, jointOri);
 	
 	XnSkeletonJointPosition jointPos;
-	pUserSkel.GetSkeletonJointPosition(userId, skelJoint, jointPos);
+	pUserSkel.GetSkeletonJointPosition(id, skelJoint, jointPos);
 	
 	if(jointOri.fConfidence > 0 )
 	{
@@ -99,7 +102,7 @@ void OpenNISkeleton::draw()
 	//glEnable(GL_DEPTH_TEST);
 	for(int i=0; i<kNumBones; i++)
 	{
-		bones[i].draw();
+		bones[i].customDraw();
 	}
 	//glDisable(GL_DEPTH_TEST);
 }

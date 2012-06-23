@@ -136,14 +136,17 @@ ofxUserGenerator::~ofxUserGenerator()
 	
 	for(int i=0; i<cloudColors.size(); i++)
 	{
-		delete cloudColors[i];
-		cloudColors[i] = NULL;
+		if (cloudColors[i])
+		{
+			cloudColors[i] = NULL;
+		}
+
 	}
 	cloudColors.clear();
 	
-	user_generator.UnregisterUserCallbacks(user_cb_handle);
-	user_generator.GetSkeletonCap().UnregisterCalibrationCallbacks(calibration_cb_handle);
-	user_generator.GetPoseDetectionCap().UnregisterFromPoseCallbacks(user_pose_cb_handle);
+	//user_generator.UnregisterUserCallbacks(user_cb_handle);
+	//user_generator.GetSkeletonCap().UnregisterCalibrationCallbacks(calibration_cb_handle);
+	//user_generator.GetPoseDetectionCap().UnregisterFromPoseCallbacks(user_pose_cb_handle);
 	for(int i =0; i<tracked_users.size(); i++)
 	{
 		delete tracked_users[i];

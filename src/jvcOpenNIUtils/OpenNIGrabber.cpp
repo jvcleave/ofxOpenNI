@@ -11,7 +11,7 @@ void XN_CALLBACK_TYPE onNewUserCallback(xn::UserGenerator& rGenerator, XnUserID 
 {
 	OpenNIGrabber* grabberInstance = static_cast<OpenNIGrabber*>(pCookie);
 	ofLogVerbose() << "OpenNIGrabber onNewUser<< " << nID << endl;
-
+	grabberInstance->createUser(nID);
 }
 
 // Callback: An existing user was lost
@@ -46,7 +46,7 @@ void XN_CALLBACK_TYPE onCalibrationEndCallback(xn::SkeletonCapability& rCapabili
 	if(bSuccess) 
 	{
 		ofLogVerbose() << "OpenNIGrabber onCalibrationEnd success: << " <<  nID << endl;
-		grabberInstance->createUser(nID);
+		grabberInstance->createTrackedUser(nID);
 	}else {
 		ofLogVerbose() << "OpenNIGrabber onCalibrationEnd failed: << " <<  nID << endl;
 	}
@@ -137,6 +137,10 @@ void OpenNIGrabber::update()
 	depthGenerator->update();
 	imageGenerator.update();
 	userGenerator.update();	
+	for (int i = 0; i<people.size(); i++) 
+	{
+		people[i].update();
+	}
 }
 
 void OpenNIGrabber::draw()
@@ -180,20 +184,36 @@ void OpenNIGrabber::drawAllScreens()
 					userGenerator.draw();
 			ofPopMatrix();
 		ofDisableBlendMode();
+	drawUsers();
 }
 void OpenNIGrabber::createUser(int nID)
 {
 	ofLogVerbose() << "OpenNIGrabber createUser: " << endl;
 	
 	OpenNIPerson person;
-	person.setup(nID, userGenerator.getTrackedUser(nID));
+	person.setup(nID, &userGenerator);
 	people.push_back(person);
 	OpenNIGrabberEventData eventData(nID);
 	ofNotifyEvent(onPersonCreatedEventDispatcher, eventData);
 	
 	
 }
-
+void OpenNIGrabber::createTrackedUser(int nID)
+{
+	ofLogVerbose() << "OpenNIGrabber createTrackedUser: " << endl;
+	for (int i=0; i<people.size(); i++) {
+		if (people[i].id = nID) {
+			people[i].addSkeleton();
+		}
+	}
+	/*OpenNIPerson person;
+	person.setup(nID, userGenerator.getTrackedUser(nID));
+	people.push_back(person);
+	OpenNIGrabberEventData eventData(nID);
+	ofNotifyEvent(onPersonCreatedEventDispatcher, eventData);*/
+	
+	
+}
 void OpenNIGrabber::deleteUser(int nID)
 {
 	ofLogVerbose() << "OpenNIGrabber deleteUser: " << endl;

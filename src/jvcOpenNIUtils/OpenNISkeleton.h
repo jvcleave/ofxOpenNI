@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "OpenNIGrabber.h"
+#include "ofxOpenNI.h"
 
 #define kNumBones 11
 
@@ -37,11 +37,11 @@ class OpenNISkeleton
 public:
 	OpenNISkeleton();
 	Bone	bones[kNumBones];
-	ofxTrackedUser* user;
+	ofxTrackedUser* trackedUser;
 	int id;
-	void setup(OpenNIGrabber* grabber, ofxTrackedUser* trackedUser);
+	void setup(ofxUserGenerator* userGen, ofxTrackedUser* trackedUser);
 	void update();
 	void transformNode(int nodeNum, XnSkeletonJoint skelJoint);
 	void draw();
-	OpenNIGrabber* oniGrabber;
+	ofxUserGenerator* userGenerator;
 };

@@ -80,10 +80,15 @@ ofxTrackedUser::ofxTrackedUser(ofxOpenNIContext* pContext)
 }
 ofxTrackedUser::~ofxTrackedUser()
 {
+	
 	for(int i=0; i<limbs.size(); i++)
 	{
-		delete limbs[i];
-		limbs[i] = NULL;
+		ofxLimb* limb= limbs[i];
+		if(limb != NULL)
+		{
+			limb = NULL;
+		}
+
 	}
 	limbs.clear();
 	ofLogVerbose() << "~ofxTrackedUser DELETED" << endl;

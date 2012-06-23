@@ -41,7 +41,7 @@ ofxGestureGenerator::ofxGestureGenerator() {
 // dtor
 //--------------------------------------------------------------
 ofxGestureGenerator::~ofxGestureGenerator() {
-	gesture_generator.UnregisterGestureCallbacks(gesture_cb_handle);
+	//gesture_generator.UnregisterGestureCallbacks(gesture_cb_handle);
 
 	gesture_generator.Unref();
 }

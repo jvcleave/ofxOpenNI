@@ -11,31 +11,46 @@
 
 OpenNIPerson::OpenNIPerson()
 {
-	user = NULL;
+	trackedUser = NULL;
+	userGenerator = NULL;
+	skeleton  = NULL;
 	id = -1;
 }
 OpenNIPerson::~OpenNIPerson()
 {
 	cout << "OpenNIPerson destructor" << endl;
-	user = NULL;
+	trackedUser = NULL;
 }
-void OpenNIPerson::setup(int personID, ofxTrackedUser* trackedUser)
+void OpenNIPerson::setup(int personID, ofxUserGenerator* userGen)
 {
 	id = personID;
-	user = trackedUser;
+	userGenerator = userGen;
+	
 }
 
+void OpenNIPerson::addSkeleton()
+{
+	trackedUser = userGenerator->getTrackedUser(id);
+	skeleton = new OpenNISkeleton();
+	skeleton->setup(userGenerator, trackedUser);
+}
 void OpenNIPerson::update()
 {
-	
+	if (trackedUser != NULL) {
+		image.setFromPixels(userGenerator->getUserPixels(id), 640, 480, OF_IMAGE_GRAYSCALE);
+	}
 }
 
 void OpenNIPerson::draw()
 {
 
-	if(user != NULL)
+	if(trackedUser != NULL)
 	{
-		user->debugDraw();
+		trackedUser->debugDraw();
 
 	}
+	if (skeleton != NULL) {
+		skeleton->draw();
+	}
+	image.draw(0, 0);
 }
