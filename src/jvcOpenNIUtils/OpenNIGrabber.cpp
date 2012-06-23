@@ -77,7 +77,7 @@ OpenNIGrabber::OpenNIGrabber()
 	filterFactor = 0.1f;
 	isMasking = true;
 	isCloud = false;
-	doAlignImageToDepth = false;
+	doAlignImageToDepth = true;
 	areCallbacksActive = false;
 	depthGenerator = new ofxDepthGenerator();
 }
