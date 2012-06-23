@@ -36,9 +36,8 @@ void OpenNIPerson::addSkeleton()
 }
 void OpenNIPerson::update()
 {
-	if (trackedUser != NULL) {
-		image.setFromPixels(userGenerator->getUserPixels(id), 640, 480, OF_IMAGE_GRAYSCALE);
-	}
+	image.setFromPixels(userGenerator->getUserPixels(id), 640, 480, OF_IMAGE_GRAYSCALE);
+
 }
 
 void OpenNIPerson::draw()
