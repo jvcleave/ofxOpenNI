@@ -58,7 +58,6 @@ void OpenNIGrabber::update()
 	depthGenerator->update();
 	imageGenerator.update();
 	userGenerator.update();	
-	
 }
 
 void OpenNIGrabber::draw()
