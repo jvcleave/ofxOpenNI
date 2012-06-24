@@ -160,7 +160,7 @@ void ofxTrackedUser::updateLimb(ofxLimb& rLimb) {
 
 void ofxTrackedUser::debugDraw(const float wScale, const float hScale) {
 	
-	glPushMatrix();
+	ofPushMatrix();
 
     glScalef(wScale, hScale, 1);
   
@@ -192,7 +192,5 @@ void ofxTrackedUser::debugDraw(const float wScale, const float hScale) {
 	
 	hip.debugDraw();
     
-    ofDrawBitmapString(ofToString((int)id), neck.position[0].X + 10, neck.position[0].Y);
-
-    glPopMatrix();
+    ofPopMatrix();
 }

@@ -144,8 +144,10 @@ void ofxDepthGenerator::update() {
 }
 
 void ofxDepthGenerator::draw(float x, float y, float w, float h) {
-	glColor3f(1,1,1);
-	depth_texture.draw(x, y, w, h);	
+	ofPushStyle();
+		//ofSetColor(ofColor::white);
+		depth_texture.draw(x, y, w, h);
+	ofPopStyle();
 }
 
 void ofxDepthGenerator::setDepthColoring(enumDepthColoring c) {

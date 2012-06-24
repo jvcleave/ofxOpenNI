@@ -22,12 +22,12 @@ public:
 	void customDraw()
 	{
 		ofPushStyle();
-		ofSetColor(ofColor::white);
-		ofPushMatrix();
-		ofTranslate(0, -20, 0);
-		ofScale(3, 30, 3);
-		ofBox(0, 0, 0, 1);
-		ofPopMatrix();	
+			ofSetColor(ofColor::white);
+			ofPushMatrix();
+				ofTranslate(0, -20, 0);
+					ofScale(3, 30, 3);
+					ofBox(0, 0, 0, 1);
+			ofPopMatrix();	
 		ofPopStyle();
 	}
 };

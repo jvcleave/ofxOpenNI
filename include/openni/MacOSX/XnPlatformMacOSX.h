@@ -39,5 +39,7 @@
 
 #undef XN_THREAD_STATIC
 #define XN_THREAD_STATIC 
- 
+#undef XN_API_DEPRECATED 
+#define XN_API_DEPRECATED(msg)
+
 #endif //_XN_PLATFORM_MACOSX_H_

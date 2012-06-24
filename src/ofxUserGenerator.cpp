@@ -314,14 +314,14 @@ void ofxUserGenerator::drawUser(int nUserNum, const float wScale, const float hS
 		tracked_users[i]->updateBonePositions();
 		tracked_users[i]->debugDraw(wScale, hScale);
 	}*/
+	
+	tracked_users[nUserNum]->debugDraw(wScale, hScale);
 }
 
 // Draw all the found users.
 //----------------------------------------
 void ofxUserGenerator::draw(const int width, const int height) {
 	
-	ofPushStyle();
-	// show green/red circle if any one is found
 	if (found_users > 0) 
 	{
 		const float wScale = width/640.0f;
@@ -332,18 +332,7 @@ void ofxUserGenerator::draw(const int width, const int height) {
 		{
 			drawUser(i, wScale, hScale);
 		}
-		
-		ofSetColor(ofColor::green);
-		
-	} else 
-	{
-		ofSetColor(ofColor::red);
-
-	}
-	
-	ofCircle(10, 10, 10);
-		
-	ofPopStyle();
+	} 		
 	
 }
 

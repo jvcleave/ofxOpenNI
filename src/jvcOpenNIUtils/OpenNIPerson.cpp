@@ -40,16 +40,24 @@ void OpenNIPerson::update()
 
 }
 
+void OpenNIPerson::draw(int x, int y)
+{
+	ofPushMatrix();
+	ofTranslate(x, y, 0);
+		image.draw(0, 0);
+		if(trackedUser != NULL)
+		{
+			trackedUser->debugDraw();
+
+		}
+		if (skeleton != NULL)
+		{
+			skeleton->draw();
+		}
+	ofPopMatrix();
+}
+
 void OpenNIPerson::draw()
 {
-
-	if(trackedUser != NULL)
-	{
-		trackedUser->debugDraw();
-
-	}
-	if (skeleton != NULL) {
-		skeleton->draw();
-	}
-	image.draw(0, 0);
+	draw(0, 480);
 }
