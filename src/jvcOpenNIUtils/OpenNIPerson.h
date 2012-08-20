@@ -21,6 +21,7 @@ public:
 	int id;
 	void setup(int personID, ofxUserGenerator* userGen);
 	void update();
+	void draw(int x, int y);
 	void draw();
 	void addSkeleton();
 	ofxTrackedUser *trackedUser;

@@ -36,21 +36,28 @@ void OpenNIPerson::addSkeleton()
 }
 void OpenNIPerson::update()
 {
-	if (trackedUser != NULL) {
-		image.setFromPixels(userGenerator->getUserPixels(id), 640, 480, OF_IMAGE_GRAYSCALE);
-	}
+	image.setFromPixels(userGenerator->getUserPixels(id), 640, 480, OF_IMAGE_GRAYSCALE);
+
+}
+
+void OpenNIPerson::draw(int x, int y)
+{
+	ofPushMatrix();
+	ofTranslate(x, y, 0);
+		image.draw(0, 0);
+		if(trackedUser != NULL)
+		{
+			trackedUser->debugDraw();
+
+		}
+		if (skeleton != NULL)
+		{
+			skeleton->draw();
+		}
+	ofPopMatrix();
 }
 
 void OpenNIPerson::draw()
 {
-
-	if(trackedUser != NULL)
-	{
-		trackedUser->debugDraw();
-
-	}
-	if (skeleton != NULL) {
-		skeleton->draw();
-	}
-	image.draw(0, 0);
+	draw(0, 480);
 }

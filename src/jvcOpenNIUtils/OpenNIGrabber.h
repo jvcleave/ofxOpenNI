@@ -10,16 +10,8 @@
 
 #include "ofMain.h"
 #include "ofxOpenNI.h"
-#include "OpenNIPerson.h"
 
-class OpenNIGrabberEventData  {
-public:
-	OpenNIGrabberEventData(int personID)
-	{
-		id = personID;
-	}
-	int id;
-};
+
 
 class OpenNIGrabber
 {
@@ -29,7 +21,7 @@ public:
 	void setup();
 	void setupWithFile(string _filename);
 	void update();
-	void addCallbacks();
+	void start();
 	void draw();
 	void drawUsers();
 	void drawAllScreens();
@@ -39,27 +31,10 @@ public:
 	ofxUserGenerator userGenerator;
 	ofxHandGenerator handGenerator;
 	
-	void createUser(int nID);
-	void createTrackedUser(int nID);
-	void deleteUser(int nID);
-	void onUserReEnter(int nID);
-	void onUserExit(int nID);
-	
-	vector<OpenNIPerson> people;
-	
-	bool areCallbacksActive;
 	float filterFactor;
 	bool isMasking;
 	bool isCloud;
 	bool doAlignImageToDepth;
-	ofEvent<OpenNIGrabberEventData> onPersonCreatedEventDispatcher;
-	ofEvent<OpenNIGrabberEventData> onPersonDeletedEventDispatcher;
-	ofEvent<OpenNIGrabberEventData> onPersonReEnterDispatcher;
-	ofEvent<OpenNIGrabberEventData> onPersonExitDispatcher;
-
 	bool isReady;
-	XnCallbackHandle user_cb_handle;
-	XnCallbackHandle user_exit_handle;
-	XnCallbackHandle user_reenter_handle;
-	XnCallbackHandle calibration_cb_handle;
+	
 };
